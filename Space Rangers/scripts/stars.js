@@ -2,7 +2,8 @@
 
 export default class Stars {
     constructor(out_x, out_y) {
-
+        this.direction = 1
+        this.shine = Math.random() * 0.05
         this.position = {
             x: out_x,
             y: out_y
@@ -21,6 +22,11 @@ export default class Stars {
 
     update(dt) {
       this.position.y += this.velocity
+      if(this.color.a > 1 || this.color.a < 0.4) {
+        this.direction = this.direction * -1
+      }
+
+      this.color.a += this.shine / this.direction 
       
     }
 
