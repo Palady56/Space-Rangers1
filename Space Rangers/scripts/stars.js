@@ -22,6 +22,7 @@ export default class Stars {
 
     update(dt) {
       this.position.y += this.velocity
+      
       if(this.color.a > 1 || this.color.a < 0.4) {
         this.direction = this.direction * -1
       }
