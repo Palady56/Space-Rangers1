@@ -2,11 +2,16 @@ import Stars from "./stars.js"
 import MenuScene from "./menu.js"
 import Background from "./background.js"
 import Player from "./player.js"
+import Asteroid from "./asteroids.js"
+import Explosion from "./explosion.js"
 
 export default class GameScene {
     constructor(game) {
         this.game = game
         this.stars = []
+        this.asteroids = []
+        this.explosions = []
+        this.count = 0
         this.Init()
     }
 
@@ -17,6 +22,8 @@ export default class GameScene {
         this.background = new Background(this.game)
 
         this.player = new Player(this.game)
+
+        
     }
 
     update(dt) {
@@ -24,19 +31,63 @@ export default class GameScene {
             (star, index) => {
 
                 if (star.position.y > this.game.canvas.height) {
-                    this.stars.splice(index, 1, new Stars(Math.random() * this.game.canvas.width, -10))
+                    setTimeout(() => {
+                        this.stars.splice(index, 1, new Stars(Math.random() * this.game.canvas.width, -10))
+                    }, 0);
                 }
-
                 star.update(dt)
             }
         )
 
         this.background.update(dt)
+
         this.player.update(dt)
+
+        if (this.count > 10) {
+            this.asteroids.push(new Asteroid(this.game))
+            this.count = 0
+        }
+
+
+        this.asteroids.forEach((asteroid, index)=>{
+            if (asteroid.position.y > this.game.canvas.height) {
+                setTimeout(() => {
+                    this.asteroids.splice(index, 1)
+                }, 0);
+            } else {
+                asteroid.update(dt)
+                this.player.bullets.forEach((bullet, i)=>{
+                    if (
+                        asteroid.hitbox.x < bullet.hitbox.x + bullet.hitbox.w &&
+                        asteroid.hitbox.x + asteroid.hitbox.w > bullet.hitbox.x &&
+                        asteroid.hitbox.y < bullet.hitbox.y + bullet.hitbox.h &&
+                        asteroid.hitbox.y + asteroid.hitbox.h > bullet.hitbox.y
+                    ) {
+                        this.explosions.push(new Explosion(asteroid.position.x, asteroid.position.y))
+                        this.player.bullets.splice(i, 1)
+                        this.asteroids.splice(index, 1)
+                    }
+                })
+            }
+
+            
+        
+        })
+
+        this.explosions.forEach((explosion, index)=>{
+            if (explosion.delete) {
+                this.explosions.splice(index, 1)
+            }else{
+                explosion.update(dt)
+            }
+        })
 
         if (this.game.checkKeyPress('Escape')) {
             this.game.setScene(MenuScene)
         }
+
+        this.count++
+
 
     }
 
@@ -52,6 +103,17 @@ export default class GameScene {
             }
         )
 
+        this.asteroids.forEach(
+            (asteroid, index) => {
+                asteroid.render(dt, ctx, canvas)
+            }
+        )
+
+        this.explosions.forEach((explosion, index)=>{
+            explosion.render(dt, ctx, canvas)
+        })
+
         this.player.render(dt, ctx, canvas)
+
     }
 }
