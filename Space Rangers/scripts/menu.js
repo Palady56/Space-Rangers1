@@ -1,6 +1,7 @@
 import IntroScene from "./intro.js"
 import GameScene from "./game.js"
 import ExitScene from "./exit.js"
+import Stars from "./stars.js"
 
 export default class MenuScene {
     constructor(game) {
@@ -14,6 +15,10 @@ export default class MenuScene {
             'Intro scene',
             'Exit'
         ]
+        this.stars = []
+        for (let i = 0; i < 200; i++) {
+            this.stars.push(new Stars(Math.random() * this.game.canvas.width, Math.random() * this.game.canvas.height))
+        }
     }
 
     update(dt) {
@@ -51,8 +56,15 @@ export default class MenuScene {
     }
 
     render(dt, ctx, canvas) {
+
         ctx.fillStyle = '#000000'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+        this.stars.forEach(
+            (star, index) => {
+                star.render(dt, ctx, canvas)
+            }
+        )
 
         ctx.font = '60px Impact'
         ctx.textBaseline = 'top'

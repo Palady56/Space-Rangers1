@@ -4,6 +4,7 @@ import Background from "./background.js"
 import Player from "./player.js"
 import Asteroid from "./asteroids.js"
 import Explosion from "./explosion.js"
+import GameOver from "./over.js"
 
 export default class GameScene {
     constructor(game) {
@@ -19,12 +20,26 @@ export default class GameScene {
         for (let i = 0; i < 100; i++) {
             this.stars.push(new Stars(Math.random() * this.game.canvas.width, Math.random() * this.game.canvas.height))
         }
+        
         this.background = new Background(this.game)
 
         this.player = new Player(this.game)
 
-        
+        this.sound = document.getElementById('bg_sound')
+        this.playSound()
     }
+    
+    playSound() {
+        this.sound.volume = 0.2
+        this.sound.loop = true
+        this.sound.play()
+    }
+
+    stopSound() {
+        this.sound.pause()
+        this.sound.currentTime = 0
+    }
+
 
     update(dt) {
         this.stars.forEach(
@@ -68,6 +83,17 @@ export default class GameScene {
                         this.asteroids.splice(index, 1)
                     }
                 })
+
+                if (
+                    asteroid.hitbox.x < this.player.hitbox.x + this.player.hitbox.w &&
+                    asteroid.hitbox.x + asteroid.hitbox.w > this.player.hitbox.x &&
+                    asteroid.hitbox.y < this.player.hitbox.y + this.player.hitbox.h &&
+                    asteroid.hitbox.y + asteroid.hitbox.h > this.player.hitbox.y
+                ) {
+                    this.stopSound()
+                    this.game.setScene(GameOver);
+    
+                }
             }
 
             

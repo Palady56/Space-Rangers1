@@ -5,11 +5,11 @@ export default class Bullet {
         this.height = 15
 
         this.velocity = {
-            y: 25
+            y: 30
         }
 
         this.image = document.getElementById('bullet')
-
+       
         this.position = {
             x: ship_x - this.image.width / 2,
             y: ship_y  
@@ -21,8 +21,17 @@ export default class Bullet {
             w: this.image.width - 20,
             h: this.image.height - 20,
         }
+        this.audio = new Audio('../sounds/bullet.ogg');
+        this.playSound()
 
+        this.playSound()
     } 
+
+
+    playSound() {
+        this.audio.volume = 0.6
+        this.audio.play()
+    }
 
     update(dt) {
         this.hitbox.y -= this.velocity.y

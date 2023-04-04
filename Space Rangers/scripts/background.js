@@ -6,10 +6,11 @@ export default class Background {
 
         this.image = document.getElementById('bg')
 
-        this.velocity = 1
+        this.velocity = 5
 
         this.dy = this.image.height - this.game.canvas.height
         this.start = this.image.height - this.game.canvas.height
+        
     }
 
     update(dt) {

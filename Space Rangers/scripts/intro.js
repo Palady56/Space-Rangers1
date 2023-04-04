@@ -2,8 +2,8 @@ import MenuScene from "./menu.js";
 export default class IntroScene {
     constructor(game) {
         this.logoRevealTime = 200
-        this.textTypingTime = 2500
-        this.sceneDisplayTime = 3500
+        this.textTypingTime = 1750
+        this.sceneDisplayTime = 2500
 
         this.elapsedTime = 0; 
         this.bigText = 'INTRO'
